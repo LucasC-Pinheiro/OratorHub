@@ -22,7 +22,7 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
 
-    /* Path aliases */
+    /* Path aliases - note: also configured in vite.config.ts */
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
