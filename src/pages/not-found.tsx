@@ -1,42 +1,32 @@
+import { Link } from "react-router-dom";
+import { ArrowLeft, Compass } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AlertCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 export function NotFoundPage() {
-  const navigate = useNavigate();
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-background/95 px-4">
-      <div className="text-center space-y-6 max-w-md">
-        <div className="flex justify-center">
-          <div className="p-3 bg-destructive/10 rounded-full">
-            <AlertCircle className="w-12 h-12 text-destructive" />
-          </div>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-aurora px-4">
+      <div className="pointer-events-none absolute inset-0 bg-grid-pattern opacity-30" />
+      <div className="relative z-10 flex max-w-md flex-col items-center gap-5 rounded-2xl border border-border bg-card/90 p-8 text-center shadow-floating backdrop-blur">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <Compass className="h-6 w-6" />
         </div>
-
-        <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight">404</h1>
-          <p className="text-lg font-semibold">Página Não Encontrada</p>
-          <p className="text-muted-foreground">
-            A página que você está procurando não existe ou foi movida.
+        <div className="space-y-1.5">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            404 — Not found
+          </p>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            We can't find that page
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            The page you're looking for may have been moved or no longer exists.
           </p>
         </div>
-
-        <div className="flex flex-col gap-2 pt-4">
-          <Button
-            onClick={() => navigate("/dashboard")}
-            className="w-full"
-          >
-            Ir para o Painel
-          </Button>
-          <Button
-            onClick={() => navigate(-1)}
-            variant="outline"
-            className="w-full"
-          >
-            Voltar
-          </Button>
-        </div>
+        <Button asChild>
+          <Link to="/dashboard">
+            <ArrowLeft className="h-4 w-4" />
+            Back to dashboard
+          </Link>
+        </Button>
       </div>
     </div>
   );
