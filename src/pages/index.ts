@@ -1,6 +1,7 @@
-export { LoginPage } from "./login";
 export { DashboardPage } from "./dashboard";
-export { TalksPage } from "./talks";
-export { SpeakersPage } from "./speakers";
-export { SettingsPage } from "./settings";
+export { LoginPage } from "./login";
 export { NotFoundPage } from "./not-found";
+export { SettingsPage } from "./settings";
+export { SpeakersPage } from "./speakers";
+export { TalksPage } from "./talks";
+

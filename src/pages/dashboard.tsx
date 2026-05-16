@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { MainLayout } from "@/layouts/main-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SkeletonLoader } from "@/components/ui/loader";
+import { MainLayout } from "@/layouts/main-layout";
 import { talksService } from "@/services/talks.service";
 import type { DashboardStats } from "@/types/talks";
-import { SkeletonLoader } from "@/components/ui/loader";
+import { useEffect, useState } from "react";
 
 export function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);

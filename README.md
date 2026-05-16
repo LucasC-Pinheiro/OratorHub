@@ -21,6 +21,7 @@ OratorHub is a professional web application designed to help congregation elders
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or yarn
 - Supabase account
@@ -55,16 +56,16 @@ The application will be available at `http://localhost:5173`
 
 ## 🛠️ Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| **Framework** | React 19 + TypeScript |
-| **Build Tool** | Vite |
-| **Styling** | TailwindCSS + Custom Design System |
-| **UI Library** | Radix UI |
-| **Backend** | Supabase (PostgreSQL + Auth) |
-| **Routing** | React Router v7 |
-| **Icons** | Lucide React |
-| **Linting** | ESLint + TypeScript |
+| Category       | Technology                         |
+| -------------- | ---------------------------------- |
+| **Framework**  | React 19 + TypeScript              |
+| **Build Tool** | Vite                               |
+| **Styling**    | TailwindCSS + Custom Design System |
+| **UI Library** | Radix UI                           |
+| **Backend**    | Supabase (PostgreSQL + Auth)       |
+| **Routing**    | React Router v7                    |
+| **Icons**      | Lucide React                       |
+| **Linting**    | ESLint + TypeScript                |
 
 ## 📁 Project Structure
 
@@ -85,6 +86,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed structure.
 ## 🎨 Design System
 
 ### Modern & Premium
+
 - Minimal, clean interface
 - Subtle animations and transitions
 - Consistent spacing and typography
@@ -92,12 +94,14 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed structure.
 - Dark mode support
 
 ### Responsive
+
 - Mobile-first approach
 - Breakpoints: sm (640px), md (768px), lg (1024px), xl (1280px)
 - Sidebar navigation on desktop
 - Hamburger menu on mobile
 
 ### Accessible
+
 - WCAG 2.1 compliant
 - Keyboard navigation support
 - Screen reader friendly
@@ -131,6 +135,7 @@ npm run dev:vite      # Direct Vite dev server
 ## 📊 Features
 
 ### Current (MVP)
+
 - ✅ User authentication
 - ✅ Dashboard with statistics
 - ✅ Page routing and navigation
@@ -140,6 +145,7 @@ npm run dev:vite      # Direct Vite dev server
 - ✅ Talks service with CRUD operations
 
 ### Planned
+
 - 📝 Talk creation/editing forms
 - 👥 Speaker management interface
 - 🔍 Advanced filtering
@@ -180,17 +186,20 @@ npm run check        # Verify all types
 ## 🐛 Troubleshooting
 
 ### Port Already in Use
+
 ```bash
 # Use a different port
 npm run dev -- --port 3000
 ```
 
 ### Supabase Connection Issues
+
 - Verify credentials in `.env`
 - Check Supabase project is active
 - Ensure CORS is properly configured
 
 ### Build Errors
+
 ```bash
 # Clear cache and reinstall
 rm -rf node_modules package-lock.json

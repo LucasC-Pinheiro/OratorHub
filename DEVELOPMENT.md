@@ -13,6 +13,7 @@ npm run lint       # Run ESLint
 ## Creating New Pages
 
 1. Create a new file in `src/pages/`:
+
 ```tsx
 import { MainLayout } from "@/layouts/main-layout";
 
@@ -28,6 +29,7 @@ export function MyPage() {
 ```
 
 2. Add to routes in `src/App.tsx`:
+
 ```tsx
 <Route
   path="/mypage"
@@ -46,6 +48,7 @@ export function MyPage() {
 ## Creating New Components
 
 ### UI Components (Reusable)
+
 ```tsx
 // src/components/ui/my-component.tsx
 import { forwardRef, type HTMLAttributes } from "react";
@@ -63,6 +66,7 @@ MyComponent.displayName = "MyComponent";
 ```
 
 ### Feature Components (Specific to features)
+
 ```tsx
 // src/components/talks/talk-card.tsx
 import type { Talk } from "@/types/talks";
@@ -80,6 +84,7 @@ export function TalkCard({ talk }: { talk: Talk }) {
 ## Using Styles
 
 ### Tailwind Classes
+
 ```tsx
 <div className="flex items-center gap-4 p-6 rounded-lg border border-border bg-card shadow-soft">
   <span>Content</span>
@@ -87,18 +92,16 @@ export function TalkCard({ talk }: { talk: Talk }) {
 ```
 
 ### Custom Utilities
+
 ```tsx
 import { cn } from "@/lib/utils";
 
 // Merge classes intelligently
-const buttonClass = cn(
-  "base-styles",
-  isActive && "active-styles",
-  customClass
-);
+const buttonClass = cn("base-styles", isActive && "active-styles", customClass);
 ```
 
 ### Component Variants
+
 ```tsx
 import { Button } from "@/components/ui/button";
 
@@ -136,6 +139,7 @@ export function MyForm() {
 ## Using Services
 
 ### Fetching Data
+
 ```tsx
 import { useEffect, useState } from "react";
 import { talksService } from "@/services/talks.service";
@@ -168,6 +172,7 @@ export function MyComponent() {
 ```
 
 ### Creating Data
+
 ```tsx
 import { talksService } from "@/services/talks.service";
 
@@ -189,6 +194,7 @@ async function createTalk() {
 ## Working with Authentication
 
 ### Accessing Auth State
+
 ```tsx
 import { useAuth } from "@/hooks/use-auth";
 
@@ -208,6 +214,7 @@ export function MyComponent() {
 ```
 
 ### Protected Routes
+
 ```tsx
 import { ProtectedRoute } from "@/routes/protected-route";
 
@@ -219,12 +226,13 @@ import { ProtectedRoute } from "@/routes/protected-route";
       <MyPage />
     </ProtectedRoute>
   }
-/>
+/>;
 ```
 
 ## Dark Mode Support
 
 ### Using Theme
+
 ```tsx
 import { useTheme } from "@/hooks/use-theme";
 
@@ -232,14 +240,13 @@ export function MyComponent() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <button onClick={toggleTheme}>
-      Current: {theme} (click to toggle)
-    </button>
+    <button onClick={toggleTheme}>Current: {theme} (click to toggle)</button>
   );
 }
 ```
 
 ### Styling for Dark Mode
+
 ```tsx
 <div className="bg-background text-foreground dark:bg-slate-950 dark:text-slate-50">
   {/* Automatically works in both modes */}
@@ -249,34 +256,46 @@ export function MyComponent() {
 ## Common Patterns
 
 ### Loading State
+
 ```tsx
 import { Loader } from "@/components/ui/loader";
 
-{loading && <Loader />}
-{!loading && <Content />}
+{
+  loading && <Loader />;
+}
+{
+  !loading && <Content />;
+}
 ```
 
 ### Error Handling
+
 ```tsx
 import { ErrorAlert } from "@/components/ui/alert";
 
-{error && <ErrorAlert>{error}</ErrorAlert>}
+{
+  error && <ErrorAlert>{error}</ErrorAlert>;
+}
 ```
 
 ### Empty State
+
 ```tsx
 import { EmptyState } from "@/components/ui/empty-state";
 
-{items.length === 0 && (
-  <EmptyState
-    icon={<SearchIcon />}
-    title="No results"
-    description="Try adjusting your search"
-  />
-)}
+{
+  items.length === 0 && (
+    <EmptyState
+      icon={<SearchIcon />}
+      title="No results"
+      description="Try adjusting your search"
+    />
+  );
+}
 ```
 
 ### Pagination
+
 ```tsx
 const [page, setPage] = useState(0);
 const limit = 20;
@@ -292,19 +311,21 @@ const totalPages = Math.ceil(count / limit);
 ## Type Safety Tips
 
 ### Always Type Props
+
 ```tsx
 // ❌ Bad
-export function MyComponent(props: any) { }
+export function MyComponent(props: any) {}
 
 // ✅ Good
 interface MyComponentProps {
   title: string;
   onClick: () => void;
 }
-export function MyComponent({ title, onClick }: MyComponentProps) { }
+export function MyComponent({ title, onClick }: MyComponentProps) {}
 ```
 
 ### Use Type Inference
+
 ```tsx
 import type { Talk } from "@/types/talks";
 
@@ -314,6 +335,7 @@ const { data } = await talksService.list();
 ```
 
 ### Generic Components
+
 ```tsx
 interface ListProps<T> {
   items: T[];
@@ -331,6 +353,7 @@ export function List<T extends { id: string }>({
 ## Performance Tips
 
 ### Lazy Load Components
+
 ```tsx
 import { lazy, Suspense } from "react";
 
@@ -338,10 +361,11 @@ const HeavyComponent = lazy(() => import("./HeavyComponent"));
 
 <Suspense fallback={<Loader />}>
   <HeavyComponent />
-</Suspense>
+</Suspense>;
 ```
 
 ### Memoize Components
+
 ```tsx
 import { memo } from "react";
 
@@ -351,6 +375,7 @@ const MyComponent = memo(function MyComponent({ data }: Props) {
 ```
 
 ### Use Cache Service
+
 ```tsx
 // Automatically caches for 5 minutes
 const { data } = await talksService.stats();
@@ -359,7 +384,9 @@ const { data } = await talksService.stats();
 ## Common Issues
 
 ### Import Path Errors
+
 Use `@/` alias instead of relative paths:
+
 ```tsx
 // ❌ Bad
 import { Button } from "../../../components/ui/button";
@@ -369,14 +396,18 @@ import { Button } from "@/components/ui/button";
 ```
 
 ### Missing Types
+
 Always export types in the same file:
+
 ```tsx
 export type ButtonProps = HTMLAttributes<HTMLButtonElement>;
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(...)
 ```
 
 ### State Not Updating
+
 Remember to create new references for objects:
+
 ```tsx
 // ❌ Bad
 items.push(newItem);

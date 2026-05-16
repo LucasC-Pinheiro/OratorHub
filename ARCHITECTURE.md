@@ -87,6 +87,7 @@ src/
 ## 🎨 Design System
 
 ### Colors
+
 - **Primary**: Blue (221° 83% 53%)
 - **Secondary**: Light gray (220° 14% 96%)
 - **Destructive**: Red (0° 84% 60%)
@@ -96,6 +97,7 @@ src/
 ### Components
 
 #### UI Components
+
 - **Button**: Multiple variants (default, secondary, outline, ghost, destructive, link)
 - **Card**: Consistent card container with header/content/footer
 - **Avatar**: User avatars with fallback initials
@@ -105,11 +107,13 @@ src/
 - **Dialog**: Modal dialogs for user actions
 
 #### Layout Components
+
 - **Stack**: Flexbox utility component (row/col, gap, alignment)
 - **Grid**: CSS Grid utility component
 - **Container**: Centered content wrapper
 
 ### Animations
+
 - Fade-in/fade-out transitions
 - Slide-in/slide-out for modals
 - Smooth hover effects
@@ -125,6 +129,7 @@ src/
 ## 📊 Data & Caching
 
 ### Talks Service
+
 - `list()`: Get paginated talks with search
 - `recent()`: Get latest talks
 - `byId()`: Get single talk by ID
@@ -135,6 +140,7 @@ src/
 - `searchTheme()`: Search talks by theme
 
 ### Caching Strategy
+
 - **TTL-based Caching**: 5-minute default TTL for queries
 - **Pattern Invalidation**: Automatic cache clearing on mutations
 - **Memory-efficient**: Automatic cleanup of expired entries
@@ -142,6 +148,7 @@ src/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or yarn
 - Supabase project
@@ -189,18 +196,21 @@ npm run check
 ## 📝 Code Style
 
 ### TypeScript Strictness
+
 - Full strict mode enabled
 - No implicit any types
 - ESLint with type-aware rules
 - Code formatting with Prettier
 
 ### Naming Conventions
+
 - Components: PascalCase (e.g., `DashboardPage`, `MainLayout`)
 - Functions: camelCase (e.g., `getTalks`, `formatDate`)
 - Constants: UPPER_SNAKE_CASE (e.g., `DEFAULT_TTL`)
 - Types: PascalCase (e.g., `Talk`, `DashboardStats`)
 
 ### File Organization
+
 - One component per file (except small utilities)
 - Index files for barrel exports
 - Feature-based folder structure
@@ -209,11 +219,13 @@ npm run check
 ## 🔄 State Management
 
 ### Currently Using
+
 - **React Context**: For global auth and theme state
 - **Local State**: useState for component-level state
 - **Service Layer**: For API interactions and caching
 
 ### Future Considerations
+
 - Redux/Zustand for complex global state
 - TanStack Query for advanced caching
 
@@ -242,6 +254,7 @@ npm run check
 ## 🧪 Type Safety
 
 All code is written in TypeScript with:
+
 - Strict null checks
 - No implicit any
 - Proper generic typing
@@ -250,6 +263,7 @@ All code is written in TypeScript with:
 ## 📦 Dependencies
 
 ### Production
+
 - `react`: UI framework
 - `react-dom`: DOM rendering
 - `react-router-dom`: Routing
@@ -263,6 +277,7 @@ All code is written in TypeScript with:
 - `clsx`: Class merging
 
 ### Development
+
 - `typescript`: Type checking
 - `vite`: Build tool
 - `eslint`: Linting
@@ -288,6 +303,7 @@ Private project for congregation use.
 ## 💡 Contributing
 
 For internal development:
+
 1. Create feature branches from `master`
 2. Write type-safe code
 3. Follow the code style guidelines
