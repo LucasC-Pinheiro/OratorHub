@@ -49,10 +49,30 @@ npm run dev
 
 The application will be available at `http://localhost:5173`
 
-## 📚 Documentation
+### Database setup
 
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Project structure and technical overview
-- **[DEVELOPMENT.md](./DEVELOPMENT.md)** - Development patterns and best practices
+OratorHub expects a single `talks` table in your Supabase project:
+
+```sql
+create table public.talks (
+  id           uuid primary key default gen_random_uuid(),
+  speaker_name text        not null,
+  congregation text        not null,
+  theme        text        not null,
+  talk_date    date        not null,
+  created_at   timestamptz not null default now()
+);
+
+alter table public.talks enable row level security;
+
+create policy "Authenticated users can read talks"
+  on public.talks for select to authenticated using (true);
+
+create policy "Authenticated users can insert talks"
+  on public.talks for insert to authenticated with check (true);
+```
+
+Create at least one user from the Supabase Auth dashboard to sign in.
 
 ## 🛠️ Tech Stack
 
@@ -61,9 +81,10 @@ The application will be available at `http://localhost:5173`
 | **Framework**  | React 19 + TypeScript              |
 | **Build Tool** | Vite                               |
 | **Styling**    | TailwindCSS + Custom Design System |
-| **UI Library** | Radix UI                           |
+| **UI Library** | Radix UI + shadcn/ui patterns      |
 | **Backend**    | Supabase (PostgreSQL + Auth)       |
-| **Routing**    | React Router v7                    |
+| **Routing**    | React Router v7 (HashRouter)       |
+| **Toasts**     | Sonner                             |
 | **Icons**      | Lucide React                       |
 | **Linting**    | ESLint + TypeScript                |
 
@@ -71,17 +92,24 @@ The application will be available at `http://localhost:5173`
 
 ```
 src/
-├── pages/           # Page components
-├── layouts/         # Layout components
-├── components/      # Reusable UI components
-├── hooks/          # Custom React hooks
-├── services/       # Business logic & APIs
-├── context/        # React Context
-├── types/          # TypeScript definitions
-└── lib/            # Utilities
+├── App.tsx               # HashRouter + provider composition
+├── main.tsx              # React entry
+├── components/
+│   ├── ui/               # Primitives (button, card, dialog, table, …)
+│   ├── layout/           # Sidebar, header, mobile sidebar, logo, theme toggle
+│   ├── dashboard/        # Dashboard-specific cards
+│   ├── talks/            # Register dialog, talks table
+│   └── protected-route   # Auth guards (ProtectedRoute, GuestRoute)
+├── context/              # AuthProvider, ThemeProvider
+├── hooks/                # useAuth, useTheme
+├── integrations/
+│   └── supabase/         # Typed client + Database types
+├── layouts/              # DashboardLayout
+├── lib/                  # Utility helpers (cn, dates, initials)
+├── pages/                # Login, Dashboard, Search, History, NotFound
+├── services/             # auth.service, talks.service
+└── types/                # Domain types
 ```
-
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed structure.
 
 ## 🎨 Design System
 
@@ -114,15 +142,11 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed structure.
 npm run dev            # Start dev server with hot reload
 
 # Production
-npm run build          # Build for production
+npm run build          # Type-check and build for production
 npm run preview        # Preview production build
 
 # Quality
-npm run check          # Run TypeScript type checker
 npm run lint           # Run ESLint
-
-# Other
-npm run dev:vite      # Direct Vite dev server
 ```
 
 ## 🔐 Authentication
@@ -134,54 +158,49 @@ npm run dev:vite      # Direct Vite dev server
 
 ## 📊 Features
 
-### Current (MVP)
+### Current
 
-- ✅ User authentication
-- ✅ Dashboard with statistics
-- ✅ Page routing and navigation
-- ✅ Dark mode support
-- ✅ Responsive design
-- ✅ Client-side caching
-- ✅ Talks service with CRUD operations
-
-### Planned
-
-- 📝 Talk creation/editing forms
-- 👥 Speaker management interface
-- 🔍 Advanced filtering
-- 📊 Analytics dashboard
-- 🔔 Real-time notifications
-- 📱 PWA mobile app
-- 🌍 Multi-language support
-- 📤 Export to PDF/CSV
+- ✅ Email/password authentication via Supabase with persistent sessions
+- ✅ Protected routes + guest-only login route
+- ✅ Dashboard with stat cards, quick search and recent talks
+- ✅ Theme search showing last speaker, congregation, date and total uses
+- ✅ Full talk history with debounced search, congregation filters, pagination
+- ✅ Register-talk dialog accessible from any page
+- ✅ Dark mode with persistent preference
+- ✅ Responsive layout with desktop sidebar + mobile slide-out menu
+- ✅ HashRouter — refreshes and direct links work on Vercel without rewrites
 
 ## 💻 Development
 
 ### Creating a New Page
 
-```tsx
-import { MainLayout } from "@/layouts/main-layout";
+Add a new `*.tsx` file under `src/pages/`, then register it inside
+`src/App.tsx` as a nested route inside the `DashboardLayout`:
 
+```tsx
+// src/pages/my-page.tsx
 export function MyPage() {
   return (
-    <MainLayout>
-      <div className="space-y-8">
-        <h1 className="text-3xl font-bold">My Page</h1>
-      </div>
-    </MainLayout>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-semibold tracking-tight">My page</h1>
+    </div>
   );
 }
 ```
 
-See [DEVELOPMENT.md](./DEVELOPMENT.md) for more patterns and examples.
+```tsx
+// src/App.tsx (inside <DashboardLayout/>)
+<Route path="/my-page" element={<MyPage />} />
+```
+
+Layout, sidebar, header, theme toggle and the register-talk dialog are
+provided automatically.
 
 ### Type Safety
 
-The entire project uses TypeScript with strict mode enabled:
-
-```bash
-npm run check        # Verify all types
-```
+The entire project uses TypeScript with strict mode enabled. `npm run
+build` runs `tsc -b` ahead of the Vite bundle, so a failing type-check
+fails the build.
 
 ## 🐛 Troubleshooting
 
@@ -210,9 +229,16 @@ npm run build
 ## 📈 Performance
 
 - **Code Splitting**: Lazy-loaded pages
-- **Caching**: 5-minute TTL for API responses
 - **Bundling**: Optimized with Vite
 - **Minification**: Automatic in production
+
+## ☁️ Deployment (Vercel)
+
+The repo ships with a `vercel.json` that builds with `npm run build`,
+outputs to `dist`, and rewrites all paths to `index.html` for SPA
+support. OratorHub uses `HashRouter`, so refreshes and direct URL
+access work without server rewrites — a useful safety net if you
+deploy somewhere else later.
 
 ## 🤝 Contributing
 
@@ -252,8 +278,6 @@ Development team: Lucas C. Pinheiro and contributors
 
 <div align="center">
 
-**[📖 Architecture Guide](./ARCHITECTURE.md)** • **[🛠️ Development Guide](./DEVELOPMENT.md)**
-
-Made with ❤️ for congregation elders
+Made with care for congregation elders
 
 </div>
