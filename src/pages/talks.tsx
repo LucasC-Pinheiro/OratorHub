@@ -50,9 +50,9 @@ export function TalksPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Talks History</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Histórico de Palestras</h1>
           <p className="text-muted-foreground mt-2">
-            View and manage all recorded talks
+            Visualize e gerencie todas as palestras registradas
           </p>
         </div>
         <Button 
@@ -60,7 +60,7 @@ export function TalksPage() {
           className="gap-2"
         >
           <Plus className="w-4 h-4" />
-          Register Talk
+          Registrar Palestra
         </Button>
       </div>
 
@@ -75,7 +75,7 @@ export function TalksPage() {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
-          placeholder="Search by theme, speaker, or congregation..."
+          placeholder="Pesquise por tema, palestrante ou congregação..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="pl-10"
@@ -96,7 +96,7 @@ export function TalksPage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">
-              {filteredTalks.length} Talk{filteredTalks.length !== 1 ? "s" : ""} Found
+              {filteredTalks.length} Palestra{filteredTalks.length !== 1 ? "s" : ""} Encontrada{filteredTalks.length !== 1 ? "s" : ""}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -118,19 +118,19 @@ export function TalksPage() {
                         {talk.theme}
                       </h3>
                       <p className="text-sm text-muted-foreground mt-1">
-                        By {talk.speaker_name} • {talk.congregation}
+                        Por {talk.speaker_name} • {talk.congregation}
                       </p>
                     </div>
                     <div className="flex-shrink-0 text-right">
                       <p className="text-sm font-medium text-primary">
-                        {new Date(talk.talk_date).toLocaleDateString("en-US", {
+                        {new Date(talk.talk_date).toLocaleDateString("pt-BR", {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
                         })}
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        {new Date(talk.created_at).toLocaleDateString()}
+                        {new Date(talk.created_at).toLocaleDateString("pt-BR")}
                       </p>
                     </div>
                   </div>
@@ -144,12 +144,12 @@ export function TalksPage() {
           <CardContent className="pt-12 pb-12 text-center">
             <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
             <h3 className="font-semibold text-lg mb-2">
-              {search ? "No talks found" : "No talks registered yet"}
+              {search ? "Nenhuma palestra encontrada" : "Nenhuma palestra registrada ainda"}
             </h3>
             <p className="text-muted-foreground mb-4">
               {search
-                ? "Try adjusting your search criteria"
-                : "Start by registering your first talk"}
+                ? "Tente ajustar seus critérios de pesquisa"
+                : "Comece registrando sua primeira palestra"}
             </p>
             {!search && (
               <Button 
@@ -157,7 +157,7 @@ export function TalksPage() {
                 className="gap-2"
               >
                 <Plus className="w-4 h-4" />
-                Register Talk
+                Registrar Palestra
               </Button>
             )}
           </CardContent>
@@ -167,7 +167,7 @@ export function TalksPage() {
       {/* Results Info */}
       {!loading && talks.length > 0 && (
         <div className="text-center text-sm text-muted-foreground">
-          Showing {filteredTalks.length} of {talks.length} talk
+          Mostrando {filteredTalks.length} de {talks.length} palestra
           {talks.length !== 1 ? "s" : ""}
         </div>
       )}

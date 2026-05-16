@@ -26,7 +26,7 @@ export function SpeakersPage() {
         setTalks(result.data);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load speakers");
+        setError(err instanceof Error ? err.message : "Falha ao carregar palestrantes");
         setTalks([]);
       } finally {
         setLoading(false);
@@ -80,9 +80,9 @@ export function SpeakersPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Speakers</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Palestrantes</h1>
         <p className="text-muted-foreground mt-2">
-          Browse all speakers and their contributions
+          Navegue por todos os palestrantes e suas contribuições
         </p>
       </div>
 
@@ -97,7 +97,7 @@ export function SpeakersPage() {
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
-          placeholder="Search speakers..."
+          placeholder="Pesquise palestrantes..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="pl-10"
@@ -129,7 +129,7 @@ export function SpeakersPage() {
                         {speaker.name}
                       </CardTitle>
                       <CardDescription className="mt-1">
-                        {speaker.count} talk{speaker.count !== 1 ? "s" : ""}
+                        {speaker.count} palestra{speaker.count !== 1 ? "s" : ""}
                       </CardDescription>
                     </div>
                     <Mic2 className="w-5 h-5 text-primary/60 flex-shrink-0" />
@@ -138,7 +138,7 @@ export function SpeakersPage() {
                 <CardContent className="space-y-3">
                   <div>
                     <p className="text-xs font-medium text-muted-foreground mb-2">
-                      Themes
+                      Temas
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {speaker.themes.slice(0, 3).map((theme) => (
@@ -160,10 +160,10 @@ export function SpeakersPage() {
                   {speaker.lastTalk && (
                     <div>
                       <p className="text-xs font-medium text-muted-foreground mb-1">
-                        Last Talk
+                        Última Palestra
                       </p>
                       <p className="text-sm text-foreground">
-                        {new Date(speaker.lastTalk.talk_date).toLocaleDateString()}
+                        {new Date(speaker.lastTalk.talk_date).toLocaleDateString("pt-BR")}
                       </p>
                     </div>
                   )}
@@ -174,7 +174,7 @@ export function SpeakersPage() {
 
           {/* Results Info */}
           <div className="text-center text-sm text-muted-foreground">
-            Showing {speakers.length} speaker{speakers.length !== 1 ? "s" : ""}
+            Mostrando {speakers.length} palestrante{speakers.length !== 1 ? "s" : ""}
           </div>
         </>
       ) : (
@@ -182,12 +182,12 @@ export function SpeakersPage() {
           <CardContent className="pt-12 pb-12 text-center">
             <Mic2 className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
             <h3 className="font-semibold text-lg mb-2">
-              {search ? "No speakers found" : "No speakers yet"}
+              {search ? "Nenhum palestrante encontrado" : "Nenhum palestrante ainda"}
             </h3>
             <p className="text-muted-foreground">
               {search
-                ? "Try adjusting your search criteria"
-                : "Speakers will appear here after registering talks"}
+                ? "Tente ajustar seus critérios de pesquisa"
+                : "Palestrantes aparecerão aqui após registrar palestras"}
             </p>
           </CardContent>
         </Card>

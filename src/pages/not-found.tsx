@@ -16,9 +16,9 @@ export function NotFoundPage() {
 
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">404</h1>
-          <p className="text-lg font-semibold">Page Not Found</p>
+          <p className="text-lg font-semibold">Página Não Encontrada</p>
           <p className="text-muted-foreground">
-            The page you're looking for doesn't exist or has been moved.
+            A página que você está procurando não existe ou foi movida.
           </p>
         </div>
 
@@ -27,14 +27,14 @@ export function NotFoundPage() {
             onClick={() => navigate("/dashboard")}
             className="w-full"
           >
-            Go to Dashboard
+            Ir para o Painel
           </Button>
           <Button
             onClick={() => navigate(-1)}
             variant="outline"
             className="w-full"
           >
-            Go Back
+            Voltar
           </Button>
         </div>
       </div>

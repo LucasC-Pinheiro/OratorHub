@@ -34,19 +34,19 @@ export function NewTalkPage() {
 
     // Validation
     if (!formData.speaker_name.trim()) {
-      setError("Speaker name is required");
+      setError("Nome do palestrante é obrigatório");
       return;
     }
     if (!formData.congregation.trim()) {
-      setError("Congregation is required");
+      setError("Congregação é obrigatória");
       return;
     }
     if (!formData.theme.trim()) {
-      setError("Theme is required");
+      setError("Tema é obrigatório");
       return;
     }
     if (!formData.talk_date) {
-      setError("Date is required");
+      setError("Data é obrigatória");
       return;
     }
 
@@ -62,7 +62,7 @@ export function NewTalkPage() {
         navigate("/talks", { replace: true });
       }, 1500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to register talk");
+      setError(err instanceof Error ? err.message : "Falha ao registrar palestra");
     } finally {
       setLoading(false);
     }
@@ -79,9 +79,9 @@ export function NewTalkPage() {
               </div>
             </div>
             <div>
-              <h2 className="font-semibold text-lg">Talk Registered Successfully!</h2>
+              <h2 className="font-semibold text-lg">Palestra Registrada com Sucesso!</h2>
               <p className="text-sm text-muted-foreground mt-2">
-                Redirecting to talks list...
+                Redirecionando para a lista de palestras...
               </p>
             </div>
           </CardContent>
@@ -102,9 +102,9 @@ export function NewTalkPage() {
           <ArrowLeft className="w-4 h-4" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Register Talk</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Registrar Palestra</h1>
           <p className="text-muted-foreground mt-1">
-            Add a new talk to your system
+            Adicione uma nova palestra ao sistema
           </p>
         </div>
       </div>
@@ -112,9 +112,9 @@ export function NewTalkPage() {
       {/* Form Card */}
       <Card>
         <CardHeader>
-          <CardTitle>Talk Details</CardTitle>
+          <CardTitle>Detalhes da Palestra</CardTitle>
           <CardDescription>
-            Fill in the information about the talk
+            Preencha as informações sobre a palestra
           </CardDescription>
         </CardHeader>
 
@@ -129,11 +129,11 @@ export function NewTalkPage() {
 
             {/* Speaker Name */}
             <div className="space-y-2">
-              <Label htmlFor="speaker_name">Speaker Name *</Label>
+              <Label htmlFor="speaker_name">Nome do Palestrante *</Label>
               <Input
                 id="speaker_name"
                 name="speaker_name"
-                placeholder="e.g., John Smith"
+                placeholder="ex: João Silva"
                 value={formData.speaker_name}
                 onChange={handleChange}
                 disabled={loading}
@@ -143,11 +143,11 @@ export function NewTalkPage() {
 
             {/* Congregation */}
             <div className="space-y-2">
-              <Label htmlFor="congregation">Congregation *</Label>
+              <Label htmlFor="congregation">Congregação *</Label>
               <Input
                 id="congregation"
                 name="congregation"
-                placeholder="e.g., Central Kingdom Hall"
+                placeholder="ex: Salão do Reino Central"
                 value={formData.congregation}
                 onChange={handleChange}
                 disabled={loading}
@@ -157,11 +157,11 @@ export function NewTalkPage() {
 
             {/* Theme */}
             <div className="space-y-2">
-              <Label htmlFor="theme">Theme/Title *</Label>
+              <Label htmlFor="theme">Tema/Título *</Label>
               <Input
                 id="theme"
                 name="theme"
-                placeholder="e.g., The Power of Faith"
+                placeholder="ex: O Poder da Fé"
                 value={formData.theme}
                 onChange={handleChange}
                 disabled={loading}
@@ -171,7 +171,7 @@ export function NewTalkPage() {
 
             {/* Date */}
             <div className="space-y-2">
-              <Label htmlFor="talk_date">Talk Date *</Label>
+              <Label htmlFor="talk_date">Data da Palestra *</Label>
               <Input
                 id="talk_date"
                 name="talk_date"
@@ -193,12 +193,12 @@ export function NewTalkPage() {
                 {loading ? (
                   <>
                     <Loader className="w-4 h-4 animate-spin" />
-                    Registering...
+                    Registrando...
                   </>
                 ) : (
                   <>
                     <BookOpen className="w-4 h-4" />
-                    Register Talk
+                    Registrar Palestra
                   </>
                 )}
               </Button>
@@ -208,7 +208,7 @@ export function NewTalkPage() {
                 onClick={() => navigate("/talks")}
                 disabled={loading}
               >
-                Cancel
+                Cancelar
               </Button>
             </div>
           </form>
@@ -218,11 +218,11 @@ export function NewTalkPage() {
       {/* Info Card */}
       <Card className="bg-muted/50">
         <CardContent className="pt-6">
-          <h3 className="font-semibold text-sm mb-2">Tips</h3>
+          <h3 className="font-semibold text-sm mb-2">Dicas</h3>
           <ul className="text-sm text-muted-foreground space-y-2">
-            <li>• Use the same speaker name consistently for better statistics</li>
-            <li>• Theme should be a clear, descriptive title of the talk</li>
-            <li>• Make sure the date is accurate for proper historical records</li>
+            <li>• Use o mesmo nome de palestrante consistentemente para melhores estatísticas</li>
+            <li>• O tema deve ser um título claro e descritivo da palestra</li>
+            <li>• Certifique-se de que a data está correta para registros históricos adequados</li>
           </ul>
         </CardContent>
       </Card>

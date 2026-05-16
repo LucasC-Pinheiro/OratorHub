@@ -21,7 +21,7 @@ export function LoginPage() {
     e.preventDefault();
     
     if (!email || !password) {
-      setError("Please fill in all fields");
+      setError("Por favor, preencha todos os campos");
       return;
     }
 
@@ -32,7 +32,7 @@ export function LoginPage() {
       await signIn({ email, password });
       navigate("/dashboard", { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Authentication failed");
+      setError(err instanceof Error ? err.message : "Falha na autenticação");
     } finally {
       setLoading(false);
     }
@@ -51,16 +51,16 @@ export function LoginPage() {
           </div>
           <h1 className="text-3xl font-bold tracking-tight">OratorHub</h1>
           <p className="text-muted-foreground">
-            Manage your congregation's talks efficiently
+            Gerencie as palestras da sua congregação com eficiência
           </p>
         </div>
 
         {/* Login Card */}
         <Card className="border-0 shadow-lg">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">Welcome back</CardTitle>
+            <CardTitle className="text-2xl">Bem-vindo de volta</CardTitle>
             <CardDescription>
-              Sign in to your account to continue
+              Faça login na sua conta para continuar
             </CardDescription>
           </CardHeader>
 
@@ -75,11 +75,11 @@ export function LoginPage() {
 
               {/* Email Field */}
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">E-mail</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="seu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={loading}
@@ -90,12 +90,12 @@ export function LoginPage() {
 
               {/* Password Field */}
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Senha</Label>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
+                    placeholder="Digite sua senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={loading}
@@ -108,7 +108,7 @@ export function LoginPage() {
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     disabled={loading}
                   >
-                    {showPassword ? "Hide" : "Show"}
+                    {showPassword ? "Ocultar" : "Mostrar"}
                   </button>
                 </div>
               </div>
@@ -122,19 +122,19 @@ export function LoginPage() {
                 {loading ? (
                   <>
                     <Loader size="sm" className="mr-2" />
-                    Signing in...
+                    Entrando...
                   </>
                 ) : (
-                  "Sign in"
+                  "Entrar"
                 )}
               </Button>
 
               {/* Demo Credentials */}
               <div className="rounded-lg bg-muted/50 p-3 space-y-2 border border-border">
-                <p className="text-xs font-medium text-muted-foreground">Demo Credentials</p>
+                <p className="text-xs font-medium text-muted-foreground">Credenciais de Demonstração</p>
                 <div className="space-y-1 text-xs text-muted-foreground">
-                  <p>Email: <code className="bg-muted px-2 py-0.5 rounded text-foreground">demo@oratorhub.com</code></p>
-                  <p>Password: <code className="bg-muted px-2 py-0.5 rounded text-foreground">demo123456</code></p>
+                  <p>E-mail: <code className="bg-muted px-2 py-0.5 rounded text-foreground">demo@oratorhub.com</code></p>
+                  <p>Senha: <code className="bg-muted px-2 py-0.5 rounded text-foreground">demo123456</code></p>
                 </div>
               </div>
             </form>
@@ -143,7 +143,7 @@ export function LoginPage() {
 
         {/* Footer */}
         <p className="text-center text-sm text-muted-foreground">
-          Version 0.1.0 • Built with React & Supabase
+          Versão 0.1.0 • Construído com React & Supabase
         </p>
       </div>
     </div>

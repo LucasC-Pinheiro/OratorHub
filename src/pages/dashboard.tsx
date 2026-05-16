@@ -1,9 +1,9 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { talksService } from "@/services/talks.service";
 import type { DashboardStats, Talk } from "@/types/talks";
-import { useEffect, useState } from "react";
 import { BookOpen, Plus, TrendingUp, Users } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function DashboardPage() {
@@ -25,7 +25,7 @@ export function DashboardPage() {
         setRecentTalks(talksData);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load data");
+        setError(err instanceof Error ? err.message : "Falha ao carregar dados");
         setStats(null);
         setRecentTalks([]);
       } finally {
@@ -41,9 +41,9 @@ export function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Painel de Controle</h1>
           <p className="text-muted-foreground mt-2">
-            Welcome back! Here's an overview of your congregation's talks.
+            Bem-vindo! Aqui está um resumo das palestras da sua congregação.
           </p>
         </div>
         <Button 
@@ -51,7 +51,7 @@ export function DashboardPage() {
           className="gap-2"
         >
           <Plus className="w-4 h-4" />
-          Register Talk
+          Registrar Palestra
         </Button>
       </div>
 
@@ -75,7 +75,7 @@ export function DashboardPage() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Total Talks
+                  Total de Palestras
                 </CardTitle>
                 <BookOpen className="w-4 h-4 text-primary/60" />
               </div>
@@ -83,7 +83,7 @@ export function DashboardPage() {
             <CardContent>
               <div className="text-3xl font-bold">{stats.total_talks}</div>
               <p className="text-xs text-muted-foreground mt-2">
-                All-time total
+                Total de todos os tempos
               </p>
             </CardContent>
           </Card>
@@ -92,7 +92,7 @@ export function DashboardPage() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Unique Speakers
+                  Palestrantes Únicos
                 </CardTitle>
                 <Users className="w-4 h-4 text-primary/60" />
               </div>
@@ -100,7 +100,7 @@ export function DashboardPage() {
             <CardContent>
               <div className="text-3xl font-bold">{stats.unique_speakers}</div>
               <p className="text-xs text-muted-foreground mt-2">
-                Different speakers
+                Palestrantes diferentes
               </p>
             </CardContent>
           </Card>
@@ -109,7 +109,7 @@ export function DashboardPage() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Unique Themes
+                  Temas Únicos
                 </CardTitle>
                 <TrendingUp className="w-4 h-4 text-primary/60" />
               </div>
@@ -117,7 +117,7 @@ export function DashboardPage() {
             <CardContent>
               <div className="text-3xl font-bold">{stats.unique_themes}</div>
               <p className="text-xs text-muted-foreground mt-2">
-                Different themes
+                Temas diferentes
               </p>
             </CardContent>
           </Card>
@@ -126,7 +126,7 @@ export function DashboardPage() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  This Month
+                  Este Mês
                 </CardTitle>
                 <TrendingUp className="w-4 h-4 text-primary/60" />
               </div>
@@ -134,14 +134,14 @@ export function DashboardPage() {
             <CardContent>
               <div className="text-3xl font-bold">{stats.this_month}</div>
               <p className="text-xs text-muted-foreground mt-2">
-                Talks scheduled
+                Palestras agendadas
               </p>
             </CardContent>
           </Card>
         </div>
       ) : (
         <div className="flex items-center justify-center py-12">
-          <p className="text-muted-foreground">No data available</p>
+          <p className="text-muted-foreground">Nenhum dado disponível</p>
         </div>
       )}
 
@@ -149,9 +149,9 @@ export function DashboardPage() {
       {recentTalks.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Recent Talks</CardTitle>
+            <CardTitle>Palestras Recentes</CardTitle>
             <CardDescription>
-              Last 5 talks in your system
+              Últimas 5 palestras do sistema
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -164,12 +164,12 @@ export function DashboardPage() {
                   <div className="flex-1">
                     <p className="font-medium text-sm">{talk.theme}</p>
                     <p className="text-xs text-muted-foreground">
-                      {talk.speaker_name || "Unknown Speaker"}
+                      {talk.speaker_name || "Palestrante Desconhecido"}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-muted-foreground">
-                      {new Date(talk.talk_date).toLocaleDateString()}
+                      {new Date(talk.talk_date).toLocaleDateString("pt-BR")}
                     </p>
                     <p className="text-xs font-medium text-primary">
                       {talk.congregation}
@@ -187,16 +187,16 @@ export function DashboardPage() {
         <Card>
           <CardContent className="pt-12 pb-12 text-center">
             <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-            <h3 className="font-semibold text-lg mb-2">No talks yet</h3>
+            <h3 className="font-semibold text-lg mb-2">Nenhuma palestra ainda</h3>
             <p className="text-muted-foreground mb-4">
-              Start registering talks to see them here
+              Comece a registrar palestras para vê-las aqui
             </p>
             <Button 
               onClick={() => navigate("/talks/new")}
               className="gap-2"
             >
               <Plus className="w-4 h-4" />
-              Register Your First Talk
+              Registre Sua Primeira Palestra
             </Button>
           </CardContent>
         </Card>
