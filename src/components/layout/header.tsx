@@ -27,12 +27,12 @@ export function Header({ onNewTalk }: { onNewTalk: () => void }) {
   async function handleSignOut() {
     try {
       await signOut();
-      toast.success("Signed out");
+      toast.success("Sessão encerrada");
       navigate("/login", { replace: true });
     } catch (error) {
-      toast.error("Failed to sign out", {
+      toast.error("Não foi possível sair", {
         description:
-          error instanceof Error ? error.message : "Please try again.",
+          error instanceof Error ? error.message : "Tente novamente.",
       });
     }
   }
@@ -57,7 +57,7 @@ export function Header({ onNewTalk }: { onNewTalk: () => void }) {
           className="hidden md:inline-flex"
         >
           <PlusCircle className="h-4 w-4" />
-          New talk
+          Novo discurso
         </Button>
 
         <ThemeToggle />
@@ -67,34 +67,37 @@ export function Header({ onNewTalk }: { onNewTalk: () => void }) {
             <button
               type="button"
               className="flex items-center gap-2 rounded-full p-0.5 pr-2 text-left transition-colors hover:bg-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              aria-label="Open profile menu"
+              aria-label="Abrir menu do perfil"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-blue-500 text-xs font-semibold text-primary-foreground">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-primary to-blue-500 text-xs font-semibold text-primary-foreground">
                 {initials(name) || <UserIcon className="h-4 w-4" />}
               </span>
               <span className="hidden flex-col leading-tight sm:flex">
                 <span className="max-w-[150px] truncate text-xs font-medium text-foreground">
-                  {name || "Account"}
+                  {name || "Conta"}
                 </span>
                 <span className="text-[10px] text-muted-foreground">
-                  Elder access
+                  Acesso de ancião
                 </span>
               </span>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent align="end" className="w-60">
             <DropdownMenuLabel className="flex flex-col gap-0.5">
               <span className="text-sm font-medium text-foreground">
-                {name || "Signed in"}
+                {name || "Logado"}
               </span>
               <span className="text-xs text-muted-foreground truncate">
                 {email}
               </span>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={handleSignOut} className="text-destructive focus:text-destructive">
+            <DropdownMenuItem
+              onSelect={handleSignOut}
+              className="text-destructive focus:text-destructive"
+            >
               <LogOut className="h-4 w-4" />
-              Sign out
+              Sair
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

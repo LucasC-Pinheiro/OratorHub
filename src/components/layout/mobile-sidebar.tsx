@@ -20,7 +20,7 @@ export function MobileSidebar({
         <Button
           variant="ghost"
           size="icon"
-          aria-label="Open menu"
+          aria-label="Abrir menu"
           className="md:hidden"
         >
           <Menu className="h-5 w-5" />
@@ -33,14 +33,14 @@ export function MobileSidebar({
             <Sidebar onItemClick={close} onNewTalk={onNewTalk} />
             <DialogPrimitive.Close className="absolute right-3 top-3 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
               <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
+              <span className="sr-only">Fechar</span>
             </DialogPrimitive.Close>
           </div>
           <DialogPrimitive.Title className="sr-only">
-            Navigation
+            Navegação
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="sr-only">
-            Main navigation menu
+            Menu principal de navegação
           </DialogPrimitive.Description>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

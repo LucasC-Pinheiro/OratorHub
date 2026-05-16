@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowRight, Eye, EyeOff, Lock, Mail, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ export function LoginPage() {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (!email || !password) {
-      toast.error("Please fill in all fields");
+      toast.error("Preencha todos os campos");
       return;
     }
 
@@ -31,13 +31,15 @@ export function LoginPage() {
     try {
       await signIn({ email, password });
       const redirectTo =
-        (location.state as LocationState)?.from?.pathname ?? "/dashboard";
-      toast.success("Welcome back");
+        (location.state as LocationState)?.from?.pathname ?? "/painel";
+      toast.success("Bem-vindo de volta");
       navigate(redirectTo, { replace: true });
     } catch (error) {
-      toast.error("Could not sign in", {
+      toast.error("Não foi possível entrar", {
         description:
-          error instanceof Error ? error.message : "Check your credentials.",
+          error instanceof Error
+            ? error.message
+            : "Confira email e senha e tente novamente.",
       });
     } finally {
       setSubmitting(false);
@@ -45,7 +47,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-aurora px-4 py-12">
+    <div className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-aurora px-4 py-10 sm:py-12">
       <div className="pointer-events-none absolute inset-0 bg-grid-pattern opacity-40" />
       <div className="pointer-events-none absolute -left-32 top-1/3 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
       <div className="pointer-events-none absolute -right-32 bottom-0 h-72 w-72 rounded-full bg-blue-400/20 blur-3xl" />
@@ -55,20 +57,21 @@ export function LoginPage() {
           <Logo />
           <div className="space-y-4">
             <h1 className="text-balance text-4xl font-semibold leading-tight tracking-tight text-foreground">
-              The elegant way for congregations to manage public talks.
+              O jeito elegante de organizar os discursos públicos da
+              congregação.
             </h1>
             <p className="max-w-md text-base text-muted-foreground">
-              Track speakers, themes and dates with confidence. Search history
-              instantly, register new talks in seconds, and avoid scheduling
-              the same theme twice.
+              Saiba na hora quem foi o último orador de cada tema, evite
+              repetições e mantenha o histórico de oradores, congregações e
+              temas sempre acessível.
             </p>
           </div>
 
           <ul className="grid gap-3">
             {[
-              "Search talks by theme, speaker or congregation",
-              "Know exactly when a theme was last given",
-              "Keep a clean, shared history accessible anywhere",
+              "Busca instantânea por tema, orador ou congregação",
+              "Inteligência que mostra quem deu o tema por último",
+              "Histórico compartilhado disponível em qualquer dispositivo",
             ].map((feature) => (
               <li
                 key={feature}
@@ -84,17 +87,18 @@ export function LoginPage() {
         </div>
 
         <div className="mx-auto w-full max-w-md animate-fade-in">
-          <div className="rounded-2xl border border-border bg-card/90 p-8 shadow-floating backdrop-blur">
+          <div className="rounded-2xl border border-border bg-card/90 p-6 shadow-floating backdrop-blur sm:p-8">
             <div className="mb-7 flex flex-col items-center text-center lg:hidden">
               <Logo />
             </div>
 
             <div className="mb-6 space-y-1.5">
               <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-                Welcome back
+                Bem-vindo de volta
               </h2>
               <p className="text-sm text-muted-foreground">
-                Sign in to access your congregation's talk records.
+                Entre para acessar os registros de discursos da sua
+                congregação.
               </p>
             </div>
 
@@ -107,10 +111,11 @@ export function LoginPage() {
                     id="email"
                     type="email"
                     autoComplete="email"
-                    placeholder="elder@congregation.org"
+                    placeholder="anciao@congregacao.org"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-9"
+                    className="h-11 pl-9 text-base sm:h-10 sm:text-sm"
+                    inputMode="email"
                     required
                   />
                 </div>
@@ -118,13 +123,7 @@ export function LoginPage() {
 
               <div className="grid gap-1.5">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <Link
-                    to="#"
-                    className="text-xs font-medium text-primary hover:underline"
-                  >
-                    Forgot password?
-                  </Link>
+                  <Label htmlFor="password">Senha</Label>
                 </div>
                 <div className="relative">
                   <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -135,7 +134,7 @@ export function LoginPage() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-9 pr-9"
+                    className="h-11 pl-9 pr-10 text-base sm:h-10 sm:text-sm"
                     required
                   />
                   <button
@@ -143,7 +142,7 @@ export function LoginPage() {
                     onClick={() => setShowPassword((v) => !v)}
                     className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                     aria-label={
-                      showPassword ? "Hide password" : "Show password"
+                      showPassword ? "Ocultar senha" : "Mostrar senha"
                     }
                   >
                     {showPassword ? (
@@ -159,20 +158,20 @@ export function LoginPage() {
                 type="submit"
                 size="lg"
                 loading={submitting}
-                className="mt-2"
+                className="mt-2 h-12 text-base sm:h-11 sm:text-sm"
               >
-                Sign in
+                Entrar
                 {!submitting ? <ArrowRight className="h-4 w-4" /> : null}
               </Button>
             </form>
 
             <p className="mt-6 text-center text-xs text-muted-foreground">
-              Authorized elders only · Protected by Supabase Auth
+              Acesso restrito a anciãos · Autenticação Supabase
             </p>
           </div>
 
           <p className="mt-4 text-center text-xs text-muted-foreground">
-            © {new Date().getFullYear()} OratorHub — built with care
+            © {new Date().getFullYear()} OratorHub — feito com cuidado
           </p>
         </div>
       </div>

@@ -19,7 +19,7 @@ export function Logo({
             OratorHub
           </span>
           <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-            Public Talks
+            Discursos Públicos
           </span>
         </div>
       )}

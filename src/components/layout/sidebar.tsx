@@ -16,9 +16,9 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/search", label: "Search Themes", icon: Search },
-  { to: "/history", label: "Talk History", icon: History },
+  { to: "/painel", label: "Painel", icon: LayoutDashboard },
+  { to: "/buscar", label: "Buscar tema", icon: Search },
+  { to: "/historico", label: "Histórico", icon: History },
 ];
 
 export function Sidebar({
@@ -46,7 +46,7 @@ export function Sidebar({
           )}
         >
           <PlusCircle className="h-4 w-4" />
-          Register talk
+          Registrar discurso
         </button>
       </div>
 
@@ -88,10 +88,11 @@ export function Sidebar({
       <div className="border-t border-sidebar-border p-4">
         <div className="rounded-lg bg-gradient-to-br from-secondary to-background p-3 shadow-soft">
           <p className="text-xs font-semibold text-foreground">
-            Need a refresher?
+            Dica rápida
           </p>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Browse talk history to check when a theme was last given.
+            Use a busca por tema para descobrir, na hora, quem foi o último
+            orador.
           </p>
         </div>
       </div>

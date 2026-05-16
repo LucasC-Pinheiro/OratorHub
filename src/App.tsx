@@ -36,13 +36,18 @@ function App() {
 
               <Route element={<ProtectedRoute />}>
                 <Route element={<DashboardLayout />}>
-                  <Route path="/dashboard" element={<DashboardPage />} />
-                  <Route path="/search" element={<SearchPage />} />
-                  <Route path="/history" element={<HistoryPage />} />
+                  <Route path="/painel" element={<DashboardPage />} />
+                  <Route path="/buscar" element={<SearchPage />} />
+                  <Route path="/historico" element={<HistoryPage />} />
                 </Route>
               </Route>
 
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              {/* Backwards-compatible redirects for the previous English URLs. */}
+              <Route path="/dashboard" element={<Navigate to="/painel" replace />} />
+              <Route path="/search" element={<Navigate to="/buscar" replace />} />
+              <Route path="/history" element={<Navigate to="/historico" replace />} />
+
+              <Route path="/" element={<Navigate to="/painel" replace />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>
