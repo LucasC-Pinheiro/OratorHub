@@ -1,6 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SkeletonLoader } from "@/components/ui/loader";
-import { MainLayout } from "@/layouts/main-layout";
 import { talksService } from "@/services/talks.service";
 import type { DashboardStats } from "@/types/talks";
 import { useEffect, useState } from "react";
@@ -29,7 +27,7 @@ export function DashboardPage() {
   }, []);
 
   return (
-    <MainLayout>
+    <div>
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
@@ -45,7 +43,11 @@ export function DashboardPage() {
         )}
 
         {loading ? (
-          <SkeletonLoader count={4} className="h-20" />
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-20 bg-muted animate-pulse rounded" />
+            ))}
+          </div>
         ) : stats ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             <Card>
@@ -117,6 +119,6 @@ export function DashboardPage() {
           </p>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

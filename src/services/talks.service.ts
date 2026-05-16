@@ -5,15 +5,6 @@ import type {
   Talk,
   ThemeSummary,
 } from "@/types/talks";
-import {
-  getCached,
-  setCached,
-  invalidateCache,
-  invalidateCachePattern,
-  talksCacheKey,
-  statsCacheKey,
-  themeCacheKey,
-} from "./cache.service";
 
 const TABLE = "talks";
 
@@ -23,10 +14,6 @@ export const talksService = {
     limit?: number;
     offset?: number;
   }): Promise<{ data: Talk[]; count: number }> {
-    const cacheKey = talksCacheKey("list", options);
-    const cached = getCached<{ data: Talk[]; count: number }>(cacheKey);
-    if (cached) return cached;
-
     let query = supabase
       .from(TABLE)
       .select("*", { count: "exact" })
@@ -49,17 +36,10 @@ export const talksService = {
 
     const { data, error, count } = await query;
     if (error) throw error;
-
-    const result = { data: (data ?? []) as Talk[], count: count ?? 0 };
-    setCached(cacheKey, result);
-    return result;
+    return { data: (data ?? []) as Talk[], count: count ?? 0 };
   },
 
   async recent(limit = 5): Promise<Talk[]> {
-    const cacheKey = talksCacheKey("recent", { limit });
-    const cached = getCached<Talk[]>(cacheKey);
-    if (cached) return cached;
-
     const { data, error } = await supabase
       .from(TABLE)
       .select("*")
@@ -67,79 +47,26 @@ export const talksService = {
       .limit(limit);
 
     if (error) throw error;
-    const result = (data ?? []) as Talk[];
-    setCached(cacheKey, result);
-    return result;
-  },
-
-  async byId(id: string): Promise<Talk | null> {
-    const cacheKey = talksCacheKey("byId", { id });
-    const cached = getCached<Talk | null>(cacheKey);
-    if (cached !== undefined) return cached;
-
-    const { data, error } = await supabase
-      .from(TABLE)
-      .select("*")
-      .eq("id", id)
-      .single();
-
-    if (error && error.code !== "PGRST116") throw error; // PGRST116 = not found
-    const result = (data as Talk | null) ?? null;
-    setCached(cacheKey, result);
-    return result;
+    return (data ?? []) as Talk[];
   },
 
   async create(payload: NewTalk): Promise<Talk> {
-    // @ts-expect-error - Supabase types can be tricky with generics
     const { data, error } = await supabase
       .from(TABLE)
-      .insert([payload])
+      // @ts-expect-error - Supabase SDK type inference limitation
+      .insert(payload)
       .select("*")
       .single();
     if (error) throw error;
-
-    // Invalidate related caches
-    invalidateCachePattern("talks:list");
-    invalidateCachePattern("talks:recent");
-    invalidateCachePattern("talks:stats");
-
-    return data as Talk;
-  },
-
-  async update(id: string, payload: Partial<NewTalk>): Promise<Talk> {
-    // @ts-expect-error - Supabase types can be tricky with generics
-    const { data, error } = await supabase
-      .from(TABLE)
-      .update(payload)
-      .eq("id", id)
-      .select("*")
-      .single();
-    if (error) throw error;
-
-    // Invalidate related caches
-    invalidateCachePattern("talks:list");
-    invalidateCache(talksCacheKey("byId", { id }));
-    invalidateCachePattern("talks:stats");
-
     return data as Talk;
   },
 
   async remove(id: string): Promise<void> {
     const { error } = await supabase.from(TABLE).delete().eq("id", id);
     if (error) throw error;
-
-    // Invalidate related caches
-    invalidateCachePattern("talks:list");
-    invalidateCachePattern("talks:recent");
-    invalidateCache(talksCacheKey("byId", { id }));
-    invalidateCachePattern("talks:stats");
   },
 
   async searchTheme(theme: string): Promise<ThemeSummary | null> {
-    const cacheKey = themeCacheKey(theme);
-    const cached = getCached<ThemeSummary | null>(cacheKey);
-    if (cached !== null) return cached;
-
     const term = theme.trim();
     if (!term) return null;
 
@@ -151,24 +78,17 @@ export const talksService = {
 
     if (error) throw error;
     const rows = (data ?? []) as Talk[];
-    const result =
-      rows.length === 0
-        ? { theme: term, total: 0, last_talk: null }
-        : {
-            theme: rows[0].theme,
-            total: rows.length,
-            last_talk: rows[0],
-          };
-
-    setCached(cacheKey, result);
-    return result;
+    if (rows.length === 0) {
+      return { theme: term, total: 0, last_talk: null };
+    }
+    return {
+      theme: rows[0].theme,
+      total: rows.length,
+      last_talk: rows[0],
+    };
   },
 
   async stats(): Promise<DashboardStats> {
-    const cacheKey = statsCacheKey();
-    const cached = getCached<DashboardStats>(cacheKey);
-    if (cached) return cached;
-
     const { data, error } = await supabase.from(TABLE).select("*");
     if (error) throw error;
 
@@ -188,15 +108,12 @@ export const talksService = {
       if (new Date(row.talk_date) >= startOfMonth) thisMonth += 1;
     }
 
-    const result = {
+    return {
       total_talks: rows.length,
       unique_speakers: speakers.size,
       unique_themes: themes.size,
       unique_congregations: congregations.size,
       this_month: thisMonth,
     };
-
-    setCached(cacheKey, result);
-    return result;
   },
 };
