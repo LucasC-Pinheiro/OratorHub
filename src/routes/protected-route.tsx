@@ -1,7 +1,7 @@
-import { useAuth } from "@/hooks/use-auth";
-import { Navigate } from "react-router-dom";
 import { PageLoader } from "@/components/ui/loader";
+import { useAuth } from "@/hooks/use-auth";
 import type { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
 
 interface ProtectedRouteProps {
   children: ReactNode;
