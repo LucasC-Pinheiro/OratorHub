@@ -1,9 +1,9 @@
 import { supabase } from "@/integrations/supabase/client";
 import type {
-  DashboardStats,
-  NewTalk,
-  Talk,
-  ThemeSummary,
+    DashboardStats,
+    NewTalk,
+    Talk,
+    ThemeSummary,
 } from "@/types/talks";
 
 const TABLE = "talks";

@@ -1,29 +1,21 @@
-import type { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
-import { Loader } from "@/components/ui/loader";
+import { Navigate } from "react-router-dom";
+import { PageLoader } from "@/components/ui/loader";
+import type { ReactNode } from "react";
 
-export type ProtectedRouteProps = {
+interface ProtectedRouteProps {
   children: ReactNode;
   fallback?: ReactNode;
-};
+}
 
-/**
- * ProtectedRoute component that requires authentication
- * Redirects to login if user is not authenticated
- */
 export function ProtectedRoute({
   children,
-  fallback = <Loader />,
+  fallback = <PageLoader />,
 }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        {fallback}
-      </div>
-    );
+    return <>{fallback}</>;
   }
 
   if (!user) {
