@@ -12,6 +12,7 @@ import type {
 } from "@/types/talks";
 
 type TalkInsert = Database["public"]["Tables"]["talks"]["Insert"];
+type TalkUpdate = Database["public"]["Tables"]["talks"]["Update"];
 
 const TABLE = "talks";
 
@@ -139,6 +140,32 @@ export const talksService = {
     await requireUserId();
     const { error } = await supabase.from(TABLE).delete().eq("id", id);
     if (error) throw asServiceError(error, "remove");
+  },
+
+  async update(id: string, payload: NewTalk): Promise<Talk> {
+    await requireUserId();
+
+    const sanitized: TalkUpdate = {
+      speaker_name: payload.speaker_name.trim(),
+      congregation: payload.congregation.trim(),
+      theme: payload.theme.trim(),
+      talk_date: payload.talk_date,
+    };
+
+    const updateBuilder = supabase
+      .from(TABLE)
+      .update(sanitized as unknown as never)
+      .eq("id", id);
+    const { data, error } = await updateBuilder.select("*").single();
+
+    if (error) throw asServiceError(error, "update");
+    if (!data) {
+      throw asServiceError(
+        new Error("O Supabase aceitou o update mas não retornou nenhum dado."),
+        "update",
+      );
+    }
+    return data as Talk;
   },
 
   /** Loose search by theme keyword — used by the dedicated search page. */

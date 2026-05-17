@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useOutletContext, useSearchParams } from "react-router-dom";
 import {
   CalendarRange,
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Filter,
@@ -13,8 +14,10 @@ import {
   User,
   X,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -28,14 +31,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
 import { TalksTable } from "@/components/talks/talks-table";
+import { RegisterTalkDialog } from "@/components/talks/register-talk-dialog";
 import {
   aggregateCongregations,
   aggregateSpeakers,
   aggregateThemes,
+  talksService,
+  type TalksServiceError,
 } from "@/services/talks.service";
-import { useTalksStore } from "@/hooks/use-talks-store";
-import { normalize, pluralize } from "@/lib/utils";
+import { removeTalk, useTalksStore } from "@/hooks/use-talks-store";
+import { formatDate, normalize, pluralize } from "@/lib/utils";
 import type { DashboardOutletContext } from "@/layouts/dashboard-layout";
+import type { Talk } from "@/types/talks";
 
 const PAGE_SIZE = 10;
 
@@ -65,6 +72,46 @@ export function HistoryPage() {
     (searchParams.get("periodo") as Range) || "all",
   );
   const [page, setPage] = useState(0);
+
+  const [editingTalk, setEditingTalk] = useState<Talk | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<Talk | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleEdit = useCallback((talk: Talk) => {
+    setEditingTalk(talk);
+  }, []);
+
+  const handleDeleteRequest = useCallback((talk: Talk) => {
+    setPendingDelete(talk);
+  }, []);
+
+  const handleDeleteConfirm = useCallback(async () => {
+    if (!pendingDelete) return;
+    setDeleting(true);
+    const target = pendingDelete;
+    try {
+      await talksService.remove(target.id);
+      removeTalk(target.id);
+      toast.success("Discurso excluído", {
+        description: `${target.speaker_name} • ${target.theme}`,
+        icon: <CheckCircle2 className="h-4 w-4 text-emerald-500" />,
+      });
+      setPendingDelete(null);
+    } catch (error) {
+      const err = error as TalksServiceError;
+      // eslint-disable-next-line no-console
+      console.error("[HistoryPage] delete failed", error);
+      toast.error("Não foi possível excluir o discurso", {
+        description:
+          err?.details ||
+          err?.hint ||
+          err?.message ||
+          "Tente novamente em instantes.",
+      });
+    } finally {
+      setDeleting(false);
+    }
+  }, [pendingDelete]);
 
   // Debounce free-text search.
   useEffect(() => {
@@ -358,6 +405,11 @@ export function HistoryPage() {
           <TalksTable
             talks={pageData}
             loading={loading && talks.length === 0}
+            pendingDeleteId={deleting ? pendingDelete?.id ?? null : null}
+            actions={{
+              onEdit: handleEdit,
+              onDelete: handleDeleteRequest,
+            }}
             emptyState={
               <EmptyState
                 icon={hasFilters ? Filter : HistoryIcon}
@@ -389,6 +441,41 @@ export function HistoryPage() {
           />
         </CardContent>
       </Card>
+
+      <RegisterTalkDialog
+        open={Boolean(editingTalk)}
+        onOpenChange={(next) => {
+          if (!next) setEditingTalk(null);
+        }}
+        editingTalk={editingTalk}
+      />
+
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        onOpenChange={(next) => {
+          if (!next && !deleting) setPendingDelete(null);
+        }}
+        title="Excluir este discurso?"
+        description="Esta ação não pode ser desfeita. O registro será removido permanentemente do histórico."
+        details={
+          pendingDelete ? (
+            <div className="space-y-1">
+              <p className="font-medium text-foreground">
+                {pendingDelete.theme}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {pendingDelete.speaker_name} • {pendingDelete.congregation} •{" "}
+                {formatDate(pendingDelete.talk_date)}
+              </p>
+            </div>
+          ) : null
+        }
+        confirmLabel="Excluir discurso"
+        cancelLabel="Manter registro"
+        tone="destructive"
+        loading={deleting}
+        onConfirm={handleDeleteConfirm}
+      />
 
       {filtered.length > 0 ? (
         <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">

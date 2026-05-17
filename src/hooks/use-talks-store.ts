@@ -38,6 +38,17 @@ export function pushTalk(talk: Talk) {
   publish(next);
 }
 
+export function replaceTalk(talk: Talk) {
+  const current = cache ?? [];
+  const next = current.map((t) => (t.id === talk.id ? talk : t));
+  publish(next);
+}
+
+export function removeTalk(id: string) {
+  const current = cache ?? [];
+  publish(current.filter((t) => t.id !== id));
+}
+
 export function useTalksStore() {
   const [talks, setTalks] = useState<Talk[]>(() => cache ?? []);
   const [loading, setLoading] = useState<boolean>(() => cache === null);

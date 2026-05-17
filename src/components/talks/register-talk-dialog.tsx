@@ -29,8 +29,8 @@ import {
   type TalksServiceError,
 } from "@/services/talks.service";
 import { formatDate, formatRelative, normalize, todayIso } from "@/lib/utils";
-import { pushTalk, useTalksStore } from "@/hooks/use-talks-store";
-import type { NewTalk } from "@/types/talks";
+import { pushTalk, replaceTalk, useTalksStore } from "@/hooks/use-talks-store";
+import type { NewTalk, Talk } from "@/types/talks";
 
 function emptyForm(initial?: Partial<NewTalk>): NewTalk {
   return {
@@ -38,6 +38,15 @@ function emptyForm(initial?: Partial<NewTalk>): NewTalk {
     congregation: initial?.congregation ?? "",
     theme: initial?.theme ?? "",
     talk_date: initial?.talk_date ?? todayIso(),
+  };
+}
+
+function formFromTalk(talk: Talk): NewTalk {
+  return {
+    speaker_name: talk.speaker_name,
+    congregation: talk.congregation,
+    theme: talk.theme,
+    talk_date: talk.talk_date,
   };
 }
 
@@ -92,30 +101,43 @@ function describeSupabaseError(error: unknown): {
   };
 }
 
+export type RegisterTalkDialogProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onCreated?: () => void;
+  onUpdated?: (talk: Talk) => void;
+  initialValues?: Partial<NewTalk>;
+  editingTalk?: Talk | null;
+};
+
 export function RegisterTalkDialog({
   open,
   onOpenChange,
   onCreated,
+  onUpdated,
   initialValues,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onCreated?: () => void;
-  initialValues?: Partial<NewTalk>;
-}) {
+  editingTalk,
+}: RegisterTalkDialogProps) {
   const { talks } = useTalksStore();
-  const [form, setForm] = useState<NewTalk>(() => emptyForm(initialValues));
+  const isEditing = Boolean(editingTalk);
+  const [form, setForm] = useState<NewTalk>(() =>
+    editingTalk ? formFromTalk(editingTalk) : emptyForm(initialValues),
+  );
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof NewTalk, string>>>(
     {},
   );
 
   useEffect(() => {
-    if (!open) {
-      setForm(emptyForm(initialValues));
+    if (open) {
+      setForm(
+        editingTalk ? formFromTalk(editingTalk) : emptyForm(initialValues),
+      );
+      setErrors({});
+    } else {
       setErrors({});
     }
-  }, [open, initialValues]);
+  }, [open, initialValues, editingTalk]);
 
   const themeOptions = useMemo<ComboboxOption[]>(() => {
     return aggregateThemes(talks).map((t) => ({
@@ -178,21 +200,34 @@ export function RegisterTalkDialog({
     event.preventDefault();
     if (!validate()) return;
 
+    const payload: NewTalk = {
+      speaker_name: form.speaker_name.trim(),
+      congregation: form.congregation.trim(),
+      theme: form.theme.trim(),
+      talk_date: form.talk_date,
+    };
+
     setSubmitting(true);
     try {
-      const created = await talksService.create({
-        speaker_name: form.speaker_name.trim(),
-        congregation: form.congregation.trim(),
-        theme: form.theme.trim(),
-        talk_date: form.talk_date,
-      });
-      pushTalk(created);
-      toast.success("Discurso registrado", {
-        description: `${created.speaker_name} • ${created.theme}`,
-        icon: <CheckCircle2 className="h-4 w-4 text-emerald-500" />,
-      });
-      onOpenChange(false);
-      onCreated?.();
+      if (editingTalk) {
+        const updated = await talksService.update(editingTalk.id, payload);
+        replaceTalk(updated);
+        toast.success("Discurso atualizado", {
+          description: `${updated.speaker_name} • ${updated.theme}`,
+          icon: <CheckCircle2 className="h-4 w-4 text-emerald-500" />,
+        });
+        onOpenChange(false);
+        onUpdated?.(updated);
+      } else {
+        const created = await talksService.create(payload);
+        pushTalk(created);
+        toast.success("Discurso registrado", {
+          description: `${created.speaker_name} • ${created.theme}`,
+          icon: <CheckCircle2 className="h-4 w-4 text-emerald-500" />,
+        });
+        onOpenChange(false);
+        onCreated?.();
+      }
     } catch (error) {
       const info = describeSupabaseError(error);
       // eslint-disable-next-line no-console
@@ -207,10 +242,13 @@ export function RegisterTalkDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Registrar novo discurso</DialogTitle>
+          <DialogTitle>
+            {isEditing ? "Editar discurso" : "Registrar novo discurso"}
+          </DialogTitle>
           <DialogDescription>
-            Salve os dados do orador para manter o histórico da congregação
-            sempre atualizado.
+            {isEditing
+              ? "Atualize os dados do discurso. As alterações ficam visíveis imediatamente para toda a congregação."
+              : "Salve os dados do orador para manter o histórico da congregação sempre atualizado."}
           </DialogDescription>
         </DialogHeader>
 
@@ -322,7 +360,7 @@ export function RegisterTalkDialog({
               Cancelar
             </Button>
             <Button type="submit" loading={submitting}>
-              Salvar discurso
+              {isEditing ? "Salvar alterações" : "Salvar discurso"}
             </Button>
           </DialogFooter>
         </form>
